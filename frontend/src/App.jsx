@@ -19,11 +19,15 @@ import StepHistory from "./components/StepHistory";
 import Hero from "./components/Hero";
 import Auth from "./components/AuthModal";
 
+// Base API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+
 // -------------------- PrepviewApp Component --------------------
 function PrepviewApp() {
   const navigate = useNavigate();
 
-  // -------------------- State --------------------
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -63,7 +67,7 @@ function PrepviewApp() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5000/api/pdf/upload", formData, {
+      const res = await axios.post(`${API_URL}/api/pdf/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -101,7 +105,7 @@ function PrepviewApp() {
           try {
             setLoading(true);
             const res = await axios.post(
-              "http://localhost:5000/api/audio/upload-audio",
+              `${API_URL}/api/audio/upload-audio`,
               formData,
               { headers: { "Content-Type": "multipart/form-data" } }
             );
@@ -127,7 +131,7 @@ function PrepviewApp() {
             if (!userId) throw new Error("User not authenticated");
 
             const sessionRes = await axios.post(
-              "http://localhost:5000/api/review/create-session",
+              `${API_URL}/api/review/create-session`,
               { topics, questions, userId }
             );
 
@@ -245,7 +249,7 @@ function PrepviewApp() {
               setCurrentQuestionIndex={setCurrentQuestionIndex}
               setCvFile={setCvFile}
               setMockScore={setMockScore}
-              handleResetInterview={handleResetInterview} // pass reset function
+              handleResetInterview={handleResetInterview}
             />
           )}
           {step === "history" && (
