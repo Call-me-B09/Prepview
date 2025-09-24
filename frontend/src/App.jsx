@@ -69,7 +69,7 @@ function PrepviewApp() {
 
       setQuestions(res.data.questions || []);
       toast.success("Topics & CV uploaded successfully!");
-      setStep(3);
+      setStep(3); // go to interview
     } catch (err) {
       console.error(err);
       toast.error("Upload failed");
@@ -117,6 +117,7 @@ function PrepviewApp() {
           }
         }
 
+        // move to next question or finish
         if (currentQuestionIndex < questions.length - 1) {
           setCurrentQuestionIndex((i) => i + 1);
         } else {
@@ -127,7 +128,7 @@ function PrepviewApp() {
 
             const sessionRes = await axios.post(
               "http://localhost:5000/api/review/create-session",
-              { topics, questions, userId } // ✅ send userId
+              { topics, questions, userId }
             );
 
             const session = sessionRes.data.session;
@@ -138,7 +139,7 @@ function PrepviewApp() {
               improvements: session.improvements || [],
             });
 
-            setStep(4);
+            setStep(4); // results
             setPreviousSessions((prev) => [session, ...prev]);
           } catch (err) {
             console.error("Session creation failed", err);
@@ -155,6 +156,17 @@ function PrepviewApp() {
       setIsRecording(false);
       mediaRecorder.stop();
     }
+  };
+
+  // -------------------- Reset Interview --------------------
+  const handleResetInterview = () => {
+    setStep(1); // go back to CV upload step
+    setCvFile(null);
+    setTopic("");
+    setTopics([]);
+    setQuestions([]);
+    setCurrentQuestionIndex(0);
+    setMockScore(null);
   };
 
   // -------------------- Helpers --------------------
@@ -178,7 +190,7 @@ function PrepviewApp() {
         </div>
       )}
 
-      {/* ---------------- User Icon ---------------- */}
+      {/* User Icon */}
       <div className="fixed top-4 right-4 z-50">
         <button
           onClick={() => setShowMenu(!showMenu)}
@@ -199,7 +211,7 @@ function PrepviewApp() {
         )}
       </div>
 
-      {/* ---------------- Center Card ---------------- */}
+      {/* Center Card */}
       <div className="absolute inset-0 flex justify-center items-center px-4">
         <div className="bg-gray-950/85 backdrop-blur-2xl border border-gray-800 rounded-3xl shadow-2xl p-8 max-w-3xl w-full">
           <h1 className="text-4xl text-white font-bold text-center mb-6">PREPVIEW</h1>
@@ -232,6 +244,8 @@ function PrepviewApp() {
               setQuestions={setQuestions}
               setCurrentQuestionIndex={setCurrentQuestionIndex}
               setCvFile={setCvFile}
+              setMockScore={setMockScore}
+              handleResetInterview={handleResetInterview} // pass reset function
             />
           )}
           {step === "history" && (
