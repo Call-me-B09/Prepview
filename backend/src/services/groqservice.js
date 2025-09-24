@@ -20,7 +20,7 @@ Do NOT include introductions, summaries, explanations, or extra text.
 
 Rules:
 - Generate exactly 5 interview questions based on ALL provided topics and CV text.
-- If the CV mentions a candidate name, include that name in the questions.
+- If the CV mentions a candidate name, must include that name in the questions.
 - If no name is present, keep the questions generic (do NOT invent a name).
 - If the CV text is empty, generate 5 strong questions from the topics alone.
 - Do NOT write anything except the questions.
