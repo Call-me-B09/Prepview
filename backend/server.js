@@ -12,10 +12,11 @@ app.use(express.json()); // Parse JSON requests
 
 // Enable CORS for frontend (Vite runs on :5173)
 app.use(cors({
-  origin: "http://localhost:5173", // Allow only your frontend
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-  credentials: true // If you use cookies/auth
+  origin: process.env.CLIENT_URL,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
+
 
 // ===== Import Routes =====
 const pdfRoutes = require("./src/routes/pdfRoutes");
@@ -60,3 +61,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+
