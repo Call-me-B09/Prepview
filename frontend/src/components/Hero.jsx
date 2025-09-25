@@ -7,7 +7,7 @@ export default function Hero() {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    navigate("/auth"); // 👈 this should match your auth route
+    navigate("/auth");
   };
 
   return (
@@ -27,18 +27,29 @@ export default function Hero() {
         </button>
       </div>
 
-       {/* Scrollable Content */}
-      <div className="relative max-w-6xl mx-auto px-6 py-32 space-y-32 grid grid-cols-1 md:grid-cols-2 gap-16">
+      {/* Fixed Right Image */}
+      <div className="hidden md:flex fixed right-10 top-1/2 -translate-y-1/2 z-0">
+        <img
+          src="/prepview.png"
+          alt="Prepview Logo"
+          className="w-[48rem] h-auto
+            drop-shadow-[0_0_25px_rgba(168,85,247,1)]
+            drop-shadow-[0_0_60px_rgba(168,85,247,0.9)]
+            drop-shadow-[0_0_120px_rgba(168,85,247,0.8)]
+            drop-shadow-[0_0_180px_rgba(168,85,247,0.6)]"
+        />
+      </div>
 
-        {/* Left Content */}
-        <div className="space-y-24">
+      {/* Scrollable Left Content */}
+      <div className="relative max-w-7xl mx-auto px-6 py-32 space-y-32 grid grid-cols-1 md:grid-cols-2 gap-32">
+        <div className="space-y-32">
           {/* Hero Intro */}
           <section>
-            <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
+            <h1 className="text-7xl md:text-8xl font-extrabold leading-tight">
               Ace Your <span className="text-purple-400">Interviews</span> <br />
               with <span className="text-purple-400">Prepview</span>
             </h1>
-            <p className="mt-6 text-xl text-gray-200 leading-relaxed max-w-lg">
+            <p className="mt-8 text-2xl text-gray-200 leading-relaxed max-w-lg">
               Prepview is your AI-powered <span className="font-semibold text-purple-300">interview practice companion</span>.
               Upload your CV, choose your role, and face realistic interview questions to sharpen your confidence and communication.
             </p>
@@ -46,8 +57,8 @@ export default function Hero() {
 
           {/* About Section */}
           <section>
-            <h2 className="text-3xl font-semibold text-purple-300">Why Prepview?</h2>
-            <p className="mt-4 text-lg text-gray-200 leading-relaxed max-w-lg">
+            <h2 className="text-4xl font-semibold text-purple-300">Why Prepview?</h2>
+            <p className="mt-6 text-xl text-gray-200 leading-relaxed max-w-lg">
               Job interviews can be stressful. Prepview simulates the experience by
               generating <span className="text-purple-400 font-medium">custom interview questions</span>
               based on your CV and chosen field, so you practice exactly what matters.
@@ -57,8 +68,8 @@ export default function Hero() {
 
           {/* Features Section */}
           <section>
-            <h2 className="text-3xl font-semibold text-purple-300">What You Get</h2>
-            <ul className="mt-4 space-y-3 text-lg text-gray-200 leading-relaxed list-disc pl-5">
+            <h2 className="text-4xl font-semibold text-purple-300">What You Get</h2>
+            <ul className="mt-6 space-y-3 text-xl text-gray-200 leading-relaxed list-disc pl-5">
               <li>AI-generated interview questions tailored to your CV</li>
               <li>Answer practice with real-time AI evaluation</li>
               <li>Mock interview mode with timers & voice answers</li>
@@ -69,10 +80,10 @@ export default function Hero() {
 
           {/* Closing CTA */}
           <section className="pb-32">
-            <h2 className="text-4xl font-bold text-purple-400">
+            <h2 className="text-5xl font-bold text-purple-400">
               Land Your Dream Job with Prepview
             </h2>
-            <p className="mt-4 text-lg text-gray-200 max-w-lg">
+            <p className="mt-6 text-xl text-gray-200 max-w-lg">
               Practice smarter, improve faster, and walk into interviews with confidence.
               Prepview makes sure you’re ready.
             </p>
@@ -80,21 +91,6 @@ export default function Hero() {
               Get Started
             </button>
           </section>
-        </div>
-
-        {/* Right Side Visuals (Centered & Bigger Logo) */}
-        <div className="hidden md:flex items-center justify-center relative">
-          <img
-  src="/prepview.png"
-  alt="Prepview Logo"
-  className="fixed right-10 top-1/2 -translate-y-1/2 w-[36rem] h-auto 
-    drop-shadow-[0_0_15px_rgba(168,85,247,1)]
-    drop-shadow-[0_0_40px_rgba(168,85,247,0.9)]
-    drop-shadow-[0_0_80px_rgba(168,85,247,0.8)]
-    drop-shadow-[0_0_120px_rgba(168,85,247,0.6)]"
-/>
-
-
         </div>
       </div>
     </div>
