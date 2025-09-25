@@ -22,10 +22,13 @@ export default function AuthPage() {
 
   const navigate = useNavigate();
 
-  // Redirect if already logged in
+  // -------------------- Auth State Check --------------------
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) navigate("/app");
+      if (user) {
+        console.log("🔑 Current Firebase UID:", user.uid);
+        navigate("/app");
+      }
     });
     return unsubscribe;
   }, [navigate]);
@@ -52,55 +55,17 @@ export default function AuthPage() {
     try {
       let userCredential;
       if (isLogin) {
-        // Login
-        try {
-          userCredential = await signInWithEmailAndPassword(auth, emailTrimmed, password);
-        } catch (err) {
-          switch (err.code) {
-            case "auth/user-not-found":
-              setError("No account found with this email. Please sign up first.");
-              break;
-            case "auth/wrong-password":
-              setError("Incorrect password. Please try again.");
-              break;
-            case "auth/invalid-email":
-              setError("Invalid email address."); 
-              break;
-            case "auth/invalid-credential":
-              setError("Invalid login credentials. Please check your email and password.");
-              break;
-            default:
-              setError("Login failed: " + err.message);
-          }
-          setLoading(false);
-          return;
-        }
+        userCredential = await signInWithEmailAndPassword(auth, emailTrimmed, password);
       } else {
-        // Signup
-        try {
-          userCredential = await createUserWithEmailAndPassword(auth, emailTrimmed, password);
-        } catch (err) {
-          switch (err.code) {
-            case "auth/email-already-in-use":
-              setError("This email is already in use. Please login instead.");
-              break;
-            case "auth/invalid-email":
-              setError("Invalid email address.");
-              break;
-            case "auth/weak-password":
-              setError("Password should be at least 6 characters.");
-              break;
-            default:
-              setError("Signup failed: " + err.message);
-          }
-          setLoading(false);
-          return;
-        }
+        userCredential = await createUserWithEmailAndPassword(auth, emailTrimmed, password);
       }
 
-      
-
+      const user = userCredential.user;
+      console.log("✅ Logged in UID:", user.uid); // Log UID
       navigate("/app");
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -114,14 +79,11 @@ export default function AuthPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      
+      console.log("✅ Google UID:", user.uid); // Log UID
       navigate("/app");
     } catch (err) {
-      if (err.code === "auth/invalid-credential") {
-        setError("Google login failed. Please try again or clear cookies.");
-      } else {
-        setError("Google login failed: " + err.message);
-      }
+      console.error(err);
+      setError("Google login failed: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -131,12 +93,10 @@ export default function AuthPage() {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center text-white">
-      {/* Background */}
       <div className="fixed inset-0 -z-10">
         <DarkVeil />
       </div>
 
-      {/* Auth Card */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -149,7 +109,6 @@ export default function AuthPage() {
 
         {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
 
-        {/* Email & Password */}
         <div className="flex flex-col gap-4">
           <input
             type="email"
@@ -174,14 +133,12 @@ export default function AuthPage() {
           </button>
         </div>
 
-        {/* Divider */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px bg-white/20" />
           <span className="text-sm text-gray-300">OR</span>
           <div className="flex-1 h-px bg-white/20" />
         </div>
 
-        {/* Google OAuth */}
         <div className="flex flex-col gap-3">
           <button
             onClick={handleGoogleAuth}
@@ -196,7 +153,6 @@ export default function AuthPage() {
           </button>
         </div>
 
-        {/* Switch Login/Signup */}
         <p className="mt-6 text-center text-sm text-gray-300">
           {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
           <button

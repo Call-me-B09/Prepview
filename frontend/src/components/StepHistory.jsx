@@ -20,7 +20,7 @@ export default function StepHistory({
         if (!user) throw new Error("User not authenticated");
 
         const res = await axios.get(
-          `http://localhost:5000/api/sessions?userId=${user.uid}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/sessions?userId=${user.uid}`
         );
         setPreviousSessions(res.data.sessions || []);
       } catch (err) {
