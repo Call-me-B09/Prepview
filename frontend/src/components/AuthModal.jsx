@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import DarkVeil from "./DarkVeil";
-import Loading from "./LoadingOverlay"; // Your custom loading overlay
+import Loading from "./LoadingOverlay";
 
 import { auth, googleProvider } from "../firebase";
 import {
@@ -17,6 +17,7 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 show/hide state
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -61,7 +62,7 @@ export default function AuthPage() {
       }
 
       const user = userCredential.user;
-      console.log("✅ Logged in UID:", user.uid); // Log UID
+      console.log("✅ Logged in UID:", user.uid);
       navigate("/app");
     } catch (err) {
       console.error(err);
@@ -79,7 +80,7 @@ export default function AuthPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      console.log("✅ Google UID:", user.uid); // Log UID
+      console.log("✅ Google UID:", user.uid);
       navigate("/app");
     } catch (err) {
       console.error(err);
@@ -117,13 +118,23 @@ export default function AuthPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 rounded-xl bg-white/20 text-white placeholder-gray-300 border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded-xl bg-white/20 text-white placeholder-gray-300 border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 rounded-xl bg-white/20 text-white placeholder-gray-300 border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 text-sm hover:text-white"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
 
           <button
             onClick={handleEmailAuth}
