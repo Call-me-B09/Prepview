@@ -2,19 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const path = require("path");
 
 dotenv.config();
 
 const app = express();
 
 // ===== Middleware =====
-app.use(express.json()); // Parse JSON requests
-
-// Enable CORS for frontend
+app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // your frontend URL
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -51,17 +48,6 @@ const connectDB = async () => {
   }
 };
 connectDB();
-
-// ===== Serve Frontend (React build) =====
-const distPath = path.join(__dirname, "dist");
-app.use(express.static(distPath));
-
-// ===== Catch-all route for React Router =====
-// ===== Catch-all route for React Router =====
-app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(distPath, "index.html"));
-});
-
 
 // ===== Global Error Handler =====
 app.use((err, req, res, next) => {
