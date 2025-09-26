@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
 
 dotenv.config();
 
@@ -10,23 +11,24 @@ const app = express();
 // ===== Middleware =====
 app.use(express.json()); // Parse JSON requests
 
-// Enable CORS for frontend (Vite runs on :5173)
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
-
+// Enable CORS for frontend
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // ===== Import Routes =====
 const pdfRoutes = require("./src/routes/pdfRoutes");
 const audioRoutes = require("./src/routes/audioRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes");
-const sessionRoutes = require("./src/routes/sessionroutes"); // Added session routes
+const sessionRoutes = require("./src/routes/sessionroutes");
 
 // ===== API Routes =====
-app.use("/api/pdf", pdfRoutes);       // e.g. POST /api/pdf/upload
-app.use("/api/audio", audioRoutes);   // e.g. POST /api/audio/upload
+app.use("/api/pdf", pdfRoutes); // e.g. POST /api/pdf/upload
+app.use("/api/audio", audioRoutes); // e.g. POST /api/audio/upload
 app.use("/api/review", reviewRoutes); // e.g. GET /api/review/sessions
 app.use("/api", sessionRoutes); // e.g. GET /api/sessions
 
@@ -50,6 +52,19 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date() });
 });
 
+// ===== Serve Frontend (React build) =====
+const distPath = path.join(__dirname, "dist");
+app.use(express.static(distPath));
+
+// Catch-all: send index.html for React Router routes
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.join(distPath, "index.html"));
+  } else {
+    res.status(404).json({ error: "API route not found" });
+  }
+});
+
 // ===== Global Error Handler =====
 app.use((err, req, res, next) => {
   console.error("⚠️ Server Error:", err.stack);
@@ -61,5 +76,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT} (Render assigned)`);
 });
-
-
