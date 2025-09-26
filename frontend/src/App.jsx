@@ -22,8 +22,6 @@ import Auth from "./components/AuthModal";
 // Base API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
 
-
-
 // -------------------- PrepviewApp Component --------------------
 function PrepviewApp() {
   const navigate = useNavigate();
@@ -203,11 +201,14 @@ function PrepviewApp() {
           <User size={24} />
         </button>
 
-        {showMenu && (
-          <div className="absolute right-0 mt-2 w-40 bg-gray-800 text-white rounded-lg shadow-lg flex flex-col">
+        {showMenu && auth.currentUser && (
+          <div className="absolute right-0 mt-2 w-max bg-gray-800 text-white rounded-lg shadow-lg flex flex-col">
+            <p className="px-4 py-2 border-b border-gray-600 whitespace-nowrap text-sm">
+              {auth.currentUser.email}
+            </p>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 hover:bg-red-600 rounded-t-lg"
+              className="px-4 py-2 hover:bg-red-600 rounded-b-lg text-left"
             >
               Logout
             </button>
