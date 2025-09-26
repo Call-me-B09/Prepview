@@ -57,13 +57,11 @@ const distPath = path.join(__dirname, "dist");
 app.use(express.static(distPath));
 
 // ===== Catch-all route for React Router =====
-app.get("/:any(*)", (req, res) => {
-  if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(distPath, "index.html"));
-  } else {
-    res.status(404).json({ error: "API route not found" });
-  }
+// ===== Catch-all route for React Router =====
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
 });
+
 
 // ===== Global Error Handler =====
 app.use((err, req, res, next) => {
