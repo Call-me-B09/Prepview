@@ -14,7 +14,7 @@ app.use(express.json()); // Parse JSON requests
 // Enable CORS for frontend
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL, // your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -27,10 +27,15 @@ const reviewRoutes = require("./src/routes/reviewRoutes");
 const sessionRoutes = require("./src/routes/sessionroutes");
 
 // ===== API Routes =====
-app.use("/api/pdf", pdfRoutes); // e.g. POST /api/pdf/upload
-app.use("/api/audio", audioRoutes); // e.g. POST /api/audio/upload
-app.use("/api/review", reviewRoutes); // e.g. GET /api/review/sessions
-app.use("/api", sessionRoutes); // e.g. GET /api/sessions
+app.use("/api/pdf", pdfRoutes);
+app.use("/api/audio", audioRoutes);
+app.use("/api/review", reviewRoutes);
+app.use("/api", sessionRoutes);
+
+// ===== Health Check =====
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date() });
+});
 
 // ===== Database Connection =====
 const connectDB = async () => {
@@ -42,22 +47,17 @@ const connectDB = async () => {
     console.log("✅ MongoDB connected");
   } catch (err) {
     console.error("❌ MongoDB connection error:", err.message);
-    process.exit(1); // Exit process on DB failure
+    process.exit(1);
   }
 };
 connectDB();
-
-// ===== Health Check =====
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date() });
-});
 
 // ===== Serve Frontend (React build) =====
 const distPath = path.join(__dirname, "dist");
 app.use(express.static(distPath));
 
-// Catch-all: send index.html for React Router routes
-app.get("*", (req, res) => {
+// ===== Catch-all route for React Router =====
+app.get("/:any(*)", (req, res) => {
   if (!req.path.startsWith("/api")) {
     res.sendFile(path.join(distPath, "index.html"));
   } else {
@@ -74,5 +74,5 @@ app.use((err, req, res, next) => {
 // ===== Start Server =====
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT} (Render assigned)`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
