@@ -36,7 +36,7 @@ export default function StepHistory({
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="text-2xl font-bold text-white text-center">📜 Previous Sessions</h2>
+      <h2 className="text-2xl font-bold text-white text-center"> Previous Sessions</h2>
 
       <div className="flex flex-col gap-4">
         {previousSessions.length === 0 && (
